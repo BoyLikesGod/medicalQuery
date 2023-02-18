@@ -1,16 +1,34 @@
-# 这是一个示例 Python 脚本。
+import time
 
-# 按 Shift+F10 执行或将其替换为您的代码。
-# 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
+from gensim.models import KeyedVectors
+from utils.arguments import DataTrainArguments, TrainingArguments, ModelArguments
+from utils.dataProcess import QQRProcessor, QQRDataset
 
+data_args = DataTrainArguments()  # 数据集参数
+training_args = TrainingArguments()
+model_args = ModelArguments()
 
-def print_hi(name):
-    # 在下面的代码行中使用断点来调试脚本。
-    print(f'Hi, {name}')  # 按 Ctrl+F8 切换断点。
+print('参数信息', data_args, training_args, model_args, sep='\n--->\n')
 
+w2v_model = KeyedVectors.load_word2vec_format(data_args.w2v_file, binary=False)
 
-# 按间距中的绿色按钮以运行脚本。
-if __name__ == '__main__':
-    print_hi('PyCharm')
+processor = QQRProcessor(data_dir=data_args.data_dir)
 
-# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
+train_dataset = QQRDataset(
+    processor.get_train_examples(),
+    processor.get_labels(),
+    vocab_mapping=w2v_model.key_to_index,
+    max_length=32
+)
+eval_dataset = QQRDataset(
+    processor.get_dev_examples(),
+    processor.get_labels(),
+    vocab_mapping=w2v_model.key_to_index,
+    max_length=32
+)
+test_dataset = QQRDataset(
+    processor.get_test_examples(),
+    processor.get_labels(),
+    vocab_mapping=w2v_model.key_to_index,
+    max_length=32
+)
