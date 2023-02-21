@@ -3,6 +3,7 @@ import json
 
 import numpy as np
 import jieba
+import torch
 from torch.utils.data import Dataset
 
 import dataclasses
@@ -149,3 +150,23 @@ class DataCollator:
         labels = []
         for item in features:
             text_a_input_ids.append(item['text_a_input_ids'])
+            text_b_input_ids.append(item['text_b_input_ids'])
+            text_a_attention_mask.append(item['text_a_attention_mask'])
+            text_b_attention_mask.append(item['text_b_attention_mask'])
+            if item['label'] is not None:
+                labels.append(item['label'])
+        text_a_input_ids = torch.tensor(text_a_input_ids, dtype=torch.long)
+        text_b_input_ids = torch.tensor(text_b_input_ids, dtype=torch.long)
+        text_a_attention_mask = torch.tensor(text_a_attention_mask, dtype=torch.long)
+        text_b_attention_mask = torch.tensor(text_b_attention_mask, dtype=torch.long)
+        if len(labels) > 0:
+            labels = torch.tensor(labels, dtype=torch.long)
+        else:
+            labels = None
+
+        return {'text_a_input_ids': text_a_input_ids,
+                'text_b_input_ids': text_b_input_ids,
+                'text_a_attention_mask': text_a_attention_mask,
+                'text_b_attention_mask': text_b_attention_mask,
+                'labels': labels
+                }

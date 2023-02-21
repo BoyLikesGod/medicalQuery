@@ -9,7 +9,7 @@ class DataTrainArguments:
         default='embedding/tencent-ailab-embedding-zh-d100-v0.2.0-s.txt',
         metadata={'help': '预训练词向量的目录'})
     data_dir: str = field(
-        default='KUAKE-QQR',
+        default='dataset',
         metadata={'help': '数据目录'})
 
     def __str__(self):
@@ -36,14 +36,14 @@ class TrainingArguments:
         metadata={'help': '测试batch size'}
     )
     num_train_epochs: int = field(
-        default=27,
+        default=2,
         metadata={"help": "训练的总epochs数"}
     )
     learning_rate: float = field(
         default=0.001,
         metadata={'help': '"AdamW的初始learning rate'}
     )
-    wight_decay: float = field(
+    weight_decay: float = field(
         default=5e-4,
         metadata={"help": "AdamW的权重衰减"}
     )
@@ -55,7 +55,7 @@ class TrainingArguments:
         default=100,
         metadata={'help': '每X步进行一次评估'}
     )
-    divce: str = field(
+    device: str = field(
         default='cpu',
         metadata={"help": '设备'}
     )
