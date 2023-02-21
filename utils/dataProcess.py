@@ -124,7 +124,7 @@ class QQRDataset(Dataset):
     def __getitem__(self, index):
         example = self.examples[index]
         label = None
-        if example.label is not None:
+        if example.label is not '':
             label = self.label2id[example.label]
 
         text_a_token_ids, text_a_attention_mask = self._tokenize(example.text_a)
